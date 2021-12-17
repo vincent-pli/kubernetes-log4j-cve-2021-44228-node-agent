@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<Properties>
+		<Property name="log-path">C:/logs/</Property>
+		<Property name="log-project-name">sample</Property>
+		<Property name="log-pattern">%d{ISO8601} %-5p [Sample][%t|%c{1}] %L %M %m\n</Property>
+		<Property name="rollover-strategy-max">7</Property>
+		<Property name="rolling-size-based">1 MB</Property>
+	</Properties>
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>${log-pattern}</pattern>
+			</PatternLayout>
+		</Console>
+  
+	 <RollingFile name="DEBUG" fileName="${log-path}/${log-project-name}-debug.log" filePattern="${log-path}/${log-project-name}-debug-%d-%i.log.zip">
+		<PatternLayout>
+			<pattern>${log-pattern}</pattern>
+		</PatternLayout>
+		<Policies>
+			<SizeBasedTriggeringPolicy size="${rolling-size-based}" />
+		</Policies>
+		<DefaultRolloverStrategy max="${rollover-strategy-max}" />
+	</RollingFile>
+	 <RollingFile name="ERROR" fileName="${log-path}/${log-project-name}-error.log" filePattern="${log-path}/${log-project-name}-error-%d-%i.log.zip">
+		<PatternLayout>
+			<pattern>${log-pattern}</pattern>
+		</PatternLayout>
+		<Policies>
+			<SizeBasedTriggeringPolicy size="${rolling-size-based}" />
+		</Policies>
+		<DefaultRolloverStrategy max="${rollover-strategy-max}" />
+	</RollingFile>
+	<RollingFile name="INFO" fileName="${log-path}/${log-project-name}-info.log" filePattern="${log-path}/${log-project-name}-info-%d-%i.log.zip">
+		<PatternLayout>
+			<pattern>${log-pattern}</pattern>
+		</PatternLayout>
+		<Policies>
+			<SizeBasedTriggeringPolicy size="${rolling-size-based}" />
+		</Policies>
+		<DefaultRolloverStrategy max="${rollover-strategy-max}" />
+		<Filters>
+			<!-- Now deny warn, error and fatal messages -->
+			<ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />
+			<ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL" />
+			<ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL" />
+
+			<!-- This filter accepts info, warn, error, fatal and denies debug/trace -->
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+		</Filters>
+	</RollingFile>
+	</appenders>
+	<Loggers>
+		<logger name="com.mkanchwala" level="trace" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="ERROR" level="error" />
+			<AppenderRef ref="DEBUG" level="debug" />
+			<AppenderRef ref="INFO" level="info" />
+		</logger>
+	</Loggers>
+</configuration>
